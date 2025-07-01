@@ -1,0 +1,74 @@
+-- Create GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "OctopismitcGui"
+ScreenGui.Parent = game:GetService("CoreGui")
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Parent = ScreenGui
+TextLabel.Size = UDim2.new(0, 350, 0, 60)
+TextLabel.Position = UDim2.new(0.5, -175, 0.1, 0)
+TextLabel.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+TextLabel.BackgroundTransparency = 0.2
+TextLabel.Text = "the octopismitc is real\n[Q] to Toggle Fly Mode"
+TextLabel.Font = Enum.Font.GothamBold
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 28
+TextLabel.BorderSizePixel = 0
+TextLabel.TextStrokeTransparency = 0.8
+TextLabel.TextWrapped = true
+
+-- Fly Mode Variables
+local flying = false
+local UIS = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+local bp, bg
+
+-- Fly Function
+local function fly()
+    bp = Instance.new("BodyPosition")
+    bp.Parent = hrp
+    bp.MaxForce = Vector3.new(100000,100000,100000)
+    bp.D = 10
+    bp.P = 10000
+    bp.Position = hrp.Position
+
+    bg = Instance.new("BodyGyro")
+    bg.Parent = hrp
+    bg.MaxTorque = Vector3.new(100000,100000,100000)
+    bg.CFrame = hrp.CFrame
+
+    -- Flying loop
+    local conn
+    conn = game:GetService("RunService").RenderStepped:Connect(function()
+        if not flying then conn:Disconnect() return end
+        bp.Position = hrp.Position + (workspace.CurrentCamera.CFrame.LookVector * ((UIS:IsKeyDown(Enum.KeyCode.W) and 2 or 0) - (UIS:IsKeyDown(Enum.KeyCode.S) and 2 or 0))
+            + workspace.CurrentCamera.CFrame.RightVector * ((UIS:IsKeyDown(Enum.KeyCode.D) and 2 or 0) - (UIS:IsKeyDown(Enum.KeyCode.A) and 2 or 0))
+            + Vector3.new(0, (UIS:IsKeyDown(Enum.KeyCode.Space) and 2 or 0) - (UIS:IsKeyDown(Enum.KeyCode.LeftControl) and 2 or 0), 0))
+        bg.CFrame = workspace.CurrentCamera.CFrame
+    end)
+end
+
+local function unfly()
+    if bp then bp:Destroy() bp = nil end
+    if bg then bg:Destroy() bg = nil end
+end
+
+-- Keybind to Toggle Fly
+UIS.InputBegan:Connect(function(input, processed)
+    if processed then return end
+    if input.KeyCode == Enum.KeyCode.Q then
+        flying = not flying
+        if flying then
+            fly()
+            TextLabel.Text = "the octopismitc is real\nFly Mode: ON [Q] to Stop"
+        else
+            unfly()
+            TextLabel.Text = "the octopismitc is real\nFly Mode: OFF [Q] to Start"
+        end
+    end
+end)
+
+-- Show initial state
+TextLabel.Text = "the octopismitc is real\nFly Mode: OFF [Q] to Start"
