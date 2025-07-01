@@ -1,2 +1,2 @@
 # the-octopismitc-is-real
-its real
+hey my slogan is the octopismitc is real is a new hub for roblox detla executor well i use it anyways i make scripts dont try to steal it im begging anyways i made a fly thing and it has no keys its keyless anywas about the script when putting the script it then executing it will show on your screen it will say the octopismitc is real then it will show to press q to fly press q to stop flying ok anywas i will make more scripts in the futrue so try looking at this page for a while and see if i post any scripts so yea.
